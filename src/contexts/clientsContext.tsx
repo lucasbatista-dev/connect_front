@@ -22,7 +22,7 @@ export interface Client {
   updatedAt: string;
   userId: string;
 }
-interface UpdateClient {
+export interface UpdateClient {
   email?: string;
   fullName?: string;
   phoneNumber?: string;
@@ -108,14 +108,10 @@ export const ClientsProvider = ({ children }: Props) => {
   };
   const updateClient = async (id: string, updatedClient: UpdateClient) => {
     try {
-      const response = await api.patch(`/clients/${id}`, updatedClient);
-      setClients((prevClients) => {
-        if (prevClients) {
-          return [...prevClients, response.data];
-        }
-        return [response.data];
-      });
-      Toast({ message: "Cliente criado com sucesso!" });
+      await api.patch(`/clients/${id}`, updatedClient);
+      const response = await api.get(`/clients/user/${userTokenInfo?.sub}`);
+      setClients(response.data)
+      Toast({ message: "Cliente atualizado com sucesso!" });
     } catch (error) {
       console.error("Erro ao criar o cliente:", error);
       Toast({ message: "Erro ao criar o cliente. Por favor, tente novamente." });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Client, useClients } from "@/contexts/clientsContext";
+import { Client, UpdateClient, useClients } from "@/contexts/clientsContext";
 import { BsFillTrash3Fill, BsPencilSquare } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import ModalCenter from "./modal";
@@ -23,8 +23,24 @@ const ClientCard: React.FC<ClientCardProps> = ({ client }) => {
     formState: { errors }
   } = useForm();
 
-  const onSubmit = (id: any, data: any) => {
-    updateClient(id, data);
+  const onSubmit = async (data: any) => {
+    const existingClient = client;
+    const updatedClient: Client = { ...existingClient };
+    console.log(existingClient);
+
+    if (data.email) {
+      updatedClient.email = data.email;
+    }
+
+    if (data.fullName) {
+      updatedClient.fullName = data.fullName;
+    }
+
+    if (data.phoneNumber) {
+      updatedClient.phoneNumber = data.phoneNumber;
+    }
+
+    await updateClient(existingClient.id, updatedClient);
     closeModal();
   };
 
