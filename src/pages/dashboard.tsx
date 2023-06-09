@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import logo from "../../public/logo.svg";
 import { useAuth } from "@/contexts/authContext";
@@ -11,6 +11,7 @@ export default function DashboardPage() {
   const { clients, createClient } = useClients();
   const { user, logout } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -25,6 +26,15 @@ export default function DashboardPage() {
     createClient(data);
     closeModal();
   };
+  useEffect(() => {
+    if (user !== null) {
+      setIsLoadingUser(false);
+    }
+  }, [user]);
+
+  if (isLoadingUser) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <main className="bg-gray-900 bg-opacity-90 h-screen w-screen flex">
